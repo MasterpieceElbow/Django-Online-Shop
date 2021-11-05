@@ -1,0 +1,59 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ category }}
+{% endblock %}
+
+{% block content %}
+<div id="sidebar">
+    <h3>Categories</h3>
+    <ul class="list-group">
+        {% for c in categories %}
+        {% with count=c.get_products_count %}
+        {% if count %}
+        <a href="{{ c.get_absolute_url }}">
+            <li class="list-group-item d-flex justify-content-between align-items-center {% if c.slug == category.slug %}active{% endif %}">
+                {{ c.name }}
+                <span class="badge bg-primary rounded-pill">{{ c.get_products_count }}</span>
+            </li>
+        </a>
+        {% else %}
+        <li class="list-group-item d-flex justify-content-between align-items-center disabled">
+            {{ c.name }}
+        </li>
+        {% endif %}
+        {% endwith %}
+        {% endfor %}
+    </ul>
+</div>
+<div class="row">
+    <h1>{{ category.name }}&nbsp;&nbsp;
+    <a class="btn btn-primary" href="{% url 'chat:category_chat_room' category.id %}">Join category chat</a></h1>
+    {% for product in products %}
+    <div class="col-sm-3">
+        <div class="card" style="width: 15em; height: 28em">
+            <a href="{{ product.get_absolute_url }}">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="...">
+                {% else %}
+                <img src="{% static 'img/no_image.png' %}" class="card-img-top" alt="...">
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Price: ${{ product.price }}</li>
+            </ul>
+            <div class="card-body">
+                <a href="{{ product.get_absolute_url }}" class="btn btn-primary">{{ product.name }}</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No products yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
