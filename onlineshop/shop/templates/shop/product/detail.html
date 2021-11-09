@@ -43,7 +43,7 @@
 </div>
 {% endif %}
 <div id="review" class="col-md-12">
-    <h2>Reviews:</h2>
+    {% if reviews %}<h2>Reviews:</h2>{% endif %}
     {% for review in reviews %}
     <hr>
     <h3>{{ review.owner.username }}</h3>
